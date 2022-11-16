@@ -32,6 +32,7 @@
 
 // OpenCV includes
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
 
 // INI-Reader includes
 #include "ini_lib/INIReader.h"
@@ -335,12 +336,16 @@ void vc::VergenceControl::loadImgArr(int rows, int cols, float* img, char c) {
         Lpatch32F = cv::Mat(rows, cols, CV_32FC1, img);
         // std::cout << "L: w: " << img.width() << " h: " << img.height() << std::endl;
         // std::cout << "L: w: " << L.size[0] << " h: " << L.size[1] << std::endl;
+        cv::imshow("left", Lpatch32F);
+       
 
     } else if (c == 'R' || c == 'r') {
         Rpatch32F = cv::Mat(rows, cols, CV_32FC1, img);
         // std::cout << "R: w: " << img.width() << " h: " << img.height() <<
         // std::endl;
+         cv::imshow("right", Rpatch32F);
     }
+    cv::waitKey(0);
 }
 
 void vc::VergenceControl::loadMatImg(cv::Mat&img, char c){
@@ -348,18 +353,22 @@ void vc::VergenceControl::loadMatImg(cv::Mat&img, char c){
         std::cerr << "Error\n";
         std::cerr << "Cannot Read Image in Constructor\n";
     }
-    std::cout << "L: w: " << img.rows << " h: " << img.cols << " D " << img.depth()<< std::endl;
+
     if (c == 'L' || c == 'l') {
         img.convertTo(Lpatch32F, CV_32FC1);
         Lpatch32F = Lpatch32F / 255.0;
-        std::cout << "L: w: " << Lpatch32F.rows << " h: " << Lpatch32F.cols << " D " << Lpatch32F.depth()<< std::endl;
-        // std::cout << "L: w: " << L.size[0] << " h: " << L.size[1] << std::endl;
+        std::cout<< "cols -> " << Lpatch32F.cols << " rows -> " << Lpatch32F.rows << std::endl;
+        //cv::imwrite("./images/input_left.png" , Lpatch32F);
+        //cv::imshow("images/left", Lpatch32F);
 
     } else if (c == 'R' || c == 'r') {
         img.convertTo(Rpatch32F, CV_32FC1);
         Rpatch32F = Rpatch32F / 255.0;
-        std::cout << "R: w: " << Rpatch32F.rows << " h: " << Rpatch32F.cols << " D " << Rpatch32F.depth()<< std::endl;
+        std::cout<< "cols -> " << Rpatch32F.cols << " rows -> " << Rpatch32F.rows << std::endl;
+        //cv::imwrite("./images/input_right.png" , Rpatch32F);
+        //cv::imshow("images/righ", Rpatch32F);
     }
+    //cv::waitKey(0);
 }
 
 void vc::VergenceControl::computeFilterPatch() {
@@ -464,8 +473,11 @@ void vc::VergenceControl::showV1compResponse_1_2(){
 
     for (int i = 0; i < 7; i++)
         for (int j = 0; j < 8; j++){
+            cv::Mat inverted;
             cv::Mat image(120, 160, CV_32FC1, &Energy[i][j]);
-            cv::imshow(" disparity maps ", image);
+            //cv::imwrite("./images/disparity_maps_" + std::to_string(i) + "_" + std::to_string(j) + ".png" , image);
+            cv::bitwise_not(image, inverted);
+            cv::imshow("disparity maps", inverted);
             cv::waitKey(0);
         }
 }
