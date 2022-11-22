@@ -53,10 +53,12 @@ class VergenceControl {
 
     void getV1compResponse_1_4(float V1comp_resp[80][60][7][8]);
     void getV1compResponse_1_2(float V1comp_resp[160][120][7][8]);
-    void getV1compResponse_1_2_(float V1comp_resp[7][8][120][160]);
+    void getV1compResponse_1_2_(std::vector<cv::Mat>&V1comp_resp);
     void getV1compResponse_full(float V1comp_resp[320][240][7][8]);
+    void getV1compResponse_full_(std::vector<cv::Mat>&V1comp_resp);
     void getV1compResponse_orig(float V1comp_resp[86][86][7][8]);
     void showV1compResponse_1_2();
+    void showV1compResponse_full();
 
     void getFilterResponse(float LfiltRes[160][120][2][8], float RfiltResShiftE[160][120][7][8], float RfiltResShiftO[160][120][7][8]);
     void getPatch(float PatchR[120][160], float PatchL[120][160]);

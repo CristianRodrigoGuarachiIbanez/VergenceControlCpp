@@ -459,27 +459,45 @@ void vc::VergenceControl::getV1compResponse_1_2(float V1comp_resp[160][120][7][8
                 }
 }
 
-void vc::VergenceControl::getV1compResponse_1_2_(float V1comp_resp[7][8][120][160]) {
+void vc::VergenceControl::getV1compResponse_1_2_(std::vector<cv::Mat>&V1comp_resp) {
     //------------------- GET V1 complex Response -------------------//
+    V1comp_resp.clear();
     for (int i = 0; i < 7; i++)
-        for (int j = 0; j < 8; j++)
-            for (int k = 0; k < 120; k++)
-                for (int l = 0; l < 160; l++) {
-                    V1comp_resp[i][j][k][l] = Energy[i][j][k][l];
-                }
+        for (int j = 0; j < 8; j++){
+            //cv::Mat image(120,160, CV_32FC1, &Energy[i][j]);
+            V1comp_resp.emplace_back(120, 160, CV_32FC1, &Energy[i][j]);
+        }
 }
 
 void vc::VergenceControl::showV1compResponse_1_2(){
 
     for (int i = 0; i < 7; i++)
         for (int j = 0; j < 8; j++){
-            cv::Mat inverted;
             cv::Mat image(120, 160, CV_32FC1, &Energy[i][j]);
-            //cv::imwrite("./images/disparity_maps_" + std::to_string(i) + "_" + std::to_string(j) + ".png" , image);
-            cv::bitwise_not(image, inverted);
-            cv::imshow("disparity maps", inverted);
+            cv::imshow("disparity maps", image);
             cv::waitKey(0);
         }
+}
+
+void vc::VergenceControl::showV1compResponse_full(){
+        for (int i = 0; i < 7; i++)
+            for (int j = 0; j < 8; j++){
+                cv::Mat image(240, 320, CV_32FC1, &Energy[i][j]);
+                cv::imshow("disparity maps", image);
+                cv::waitKey(0);
+        }
+
+}
+
+void vc::VergenceControl::getV1compResponse_full_(std::vector<cv::Mat>&V1comp_resp){
+    //------------------- GET V1 complex Response -------------------//
+    V1comp_resp.clear();
+    for (int i = 0; i < 7; i++)
+        for (int j = 0; j < 8; j++) {
+            //cv::Mat image(240, 320, CV_32FC1, &Energy[i][j]);
+            V1comp_resp.emplace_back(240, 320, CV_32FC1, &Energy[i][j]);
+            }
+
 }
 
 void vc::VergenceControl::getV1compResponse_full(float V1comp_resp[320][240][7][8]) {
